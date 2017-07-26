@@ -1,0 +1,73 @@
+---
+layout: default
+title: Create New Collector
+lead: Know the steps to create your own collector
+slug: new_collector
+---
+<div class="bs-docs-section">
+  <h2 id="create_new_collector" class="page-header">
+    <a class="anchorjs-link " href="#software_requirements" aria-label="Anchor link for:create_new_collector" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Create New Collector
+  </h2>
+    
+<h3 class="page-header">Copy Sample Collector Project</h3>
+<p>Copy the sample collector project into a new directory in the collectors folder and give it a name to match the collector you are building (eg pivotalTracker). In the pom.xml file, change the artifactId, name and optionally the groupId elements, like so:</p>
+<pre><code>&lt;project&gt;
+    &lt;groupId&gt;com.capitalone.dashboard&lt;/groupId&gt;
+    &lt;artifactId&gt;pivotal-tracker-collector&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;Pivotal Tracker Collector&lt;/name&gt;
+
+    ...
+&lt;/project&gt;</code></pre>
+<p>The pom file includes all of the dependencies you will need to interact with the Dashboard Application MongoDB instance, such as Model classes and Repositories.</p>
+<h3 class="page-header">Extend the Collector</h3>
+<p>If you need to store extra configuration for your collector, you can create a class that extends the Collector and adds new fields to store configuration information that is specific to your collector.</p>
+<pre><code>package com.capitalone.dashboard.collector;
+
+import com.capitalone.dashboard.model.Collector;
+
+/**
+ * Collect Features from PivotalTracker
+ */
+public class PivotalTrackerCollector extends Collector {
+    private String apiToken;
+
+    public String getApiToken() {
+        return apiToken;
+    }
+
+    public void setApiToken(String apiToken) {
+        this.apiToken = apiToken;
+    }
+}</code></pre>
+<p>If you decide to take this approach, you will also need to create a Spring Data repository interface that extends from BaseCollectorRepository.</p>
+<pre><code>package com.capitalone.dashboard.repository;
+
+import com.capitalone.dashboard.model.PivotalTrackerCollector;
+
+public interface PivotalTrackerCollectorRepository extends BaseCollectorRepository&lt;PivotalTrackerCollector&gt; {
+}</code></pre>
+<h3 class="page-header">Extend CollectorItem</h3>
+<p>Create a class that extends CollectorItem and add new fields to store information that identifies a unique item within the tool. In the Pivotal Tracker example, we will add a projectId field to CollectorItem so that each project’s features can be tracked.</p>
+<pre><code>package com.capitalone.dashboard.collector;
+
+import com.capitalone.dashboard.model.CollectorItem;
+
+public class PivotalTrackerCollectorItem extends CollectorItem {
+    private long projectId;
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
+    }
+}</code></pre>
+<h3 class="page-header">Create CollectorTask</h3>
+<p>Create a class that extends the abstract CollectorTask and implement the required abstract methods.</p>
+<h3 class="page-header">getCollector() Method</h3>
+<p>The getCollector method should return a prototypical instance of your Collector subclass (eg PivotalTrackerCollector). This method is only used the very first time</p>
+</div>

@@ -1,0 +1,85 @@
+---
+layout: default
+title: Subversion Collector
+lead: Know the Basics of Configuring the Subversion Collector
+slug: subversion_collector
+---
+<div class="bs-docs-section">
+  
+   <h2  class="page-header">
+    <a class="anchorjs-link " href="#subversion_collector" aria-label="Anchor link for: subversion_collector" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Subversion Collector
+   </h2>
+   
+   
+   <p>Configure the Subversion Collector to display and monitor information on the Hygieia Dashboard, related to code contribution activites from the GitHub repository. Hygieia uses Spring Boot to package the collector as an executable jar file, with dependencies.</p>
+   
+   <h3 id="subversion_collector_toc" class="page-header">Contents</h3>
+   <ul>
+		<li><a href="#setup_instructions">Setup Instructions</a></li>
+		<li><a href="#sample_application_properties_file">Sample Application Properties File</a></li>
+   </ul> 
+	
+   <h3 id="setup_instructions" class="page-header">Setup Instructions</h3>
+   <p>To configure the Github Collector, execute the following steps:</p>
+   
+   <ul> 
+    <li> <b>Step 1: Change Directory</b></li>
+		 <p>Change the current working directory to the <code>subversion</code> directory of your Hygieia source code installation.</p> 
+		 <p>For example, in the Windows command prompt, run the following command:
+		 <pre code>cd C:\Users\[usernname]\hygieia\collectors\scm\github</pre code> </p>
+    <li> <b>Step 2: Run Maven Build </b></li>
+		 <p>Run the maven build to package the collector into an executable jar file:</p>
+		 <pre code> mvn install</pre code>
+		 <p>The output file <code>github-collector.jar</code> is generated in the <code>github\target</code> folder.</p>
+		 
+	<li> <b>Step 3: Set Parameters in Application Properties File</b> </li>
+		 <p>Set the configurable parameters in the <code>application.properties</code> file to connect to the Dashboard MongoDB database instance, including properties required by the GitHub Collector.</p>
+		 <p>For information about sourcing the application properties file, refer to the <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-external-config-application-property-files">Spring Boot Documentation</a>.</p>
+		 <p>To configure parameters for the GitHub Collector, refer to the sample <a href="#sample_application_properties_file">application.properties</a> file.</p>
+	<li> <b>Step 4: Deploy the Executable File</b> </li> 
+		 <p>To deploy the <code>github-collector.jar</code> file, change directory to <code>github\target</code> and then execute the following from the command prompt:</p>
+		 <pre code>java -jar github-collector.jar </pre code>
+		 <p>If the <code>application.properties</code> file is not in the same location as the jar file, and then execute the following command:</p>
+		 <pre code>java -jar github-collector.jar --spring.config.name=github --spring.config.location=[path to application.properties file]</pre code>
+	 
+	</ul>
+	
+		<h3 id="sample_application_properties_file">Sample Application Properties File</h3>
+		<p>The sample <code>application.properties</code> file lists parameter values to configure the GitHub Collector. Set the parapeters based on your environment setup.</p> 
+		<pre class="properties"><code>
+		# Database Name
+		dbname=dashboard
+
+		# Database HostName - default is localhost
+		dbhost=localhost
+
+		# Database Port - default is 27017
+		dbport=27017
+
+		# MongoDB replica set
+		dbreplicaset=[false if you are not using MongoDB replicaset]
+		dbhostport=[host1:port1,host2:port2,host3:port3]
+
+		# Database Username - default is blank
+		dbusername=db
+
+		# Database Password - default is blank
+		dbpassword=dbpass
+
+		# Logging File location
+		logging.file=./logs/github.log
+
+		# Collector schedule (required)
+		github.cron=0 0/5 * * * *
+
+		github.host=github.com
+
+		# Maximum number of days to go back in time when fetching commits
+		github.commitThresholdDays=15
+
+		#Optional: Error threshold count after which collector stops collecting for a collector item. Default is 2.
+		github.errorThreshold=1
+</code></pre>
+</div>

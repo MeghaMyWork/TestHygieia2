@@ -1,0 +1,10 @@
+# Custom vars
+current_version:  2.0
+repo:             https://github.com/meghamagaji/hygieia
+
+download:
+  source:         https://github.com/capitalone/hygieia/archive/master.zip
+
+
+
+theme: jekyll-theme-slate

@@ -1,0 +1,750 @@
+---
+layout: default
+title: Getting Started
+lead: Know the Basics of Installing and Configuring Hygieia
+slug: getting_started
+---
+
+<div class="bs-docs-section">
+  
+  <!-- Start New Content-->
+  <!-- Create Table of Contents-->  
+   <h2  class="page-header">
+    <a class="anchorjs-link " href="#introduction_to_hygieia" aria-label="Anchor link for: introduction_to_hygieia" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Hygieia - The DevOps Dashboard
+  </h2>
+		<p> Hygieia is a single, configurable, easy-to-use dashboard to visualize near real-time status 
+            of the entire delivery pipeline. The health of the continuous delivery pipeline, from code commit to production deployment, with all the necessary information around health and quality of the software, is essential for any DevOps Organization.
+		</p>
+		<p>	Hygieia dashboards assist in achieving process transparency and therefore help establish 
+			feedback loops that are the underlying concept of lean and DevOps. They contain interactive elements which enable drill-down and linking to the connected DevOps tools.
+ 		</p>
+		  
+  <h3 id="toc" class="page-header">Contents</h3>
+  
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+    </li>
+    <ul>
+      <li><a href="#overview">Overview</a>
+      </li>
+      <li><a href="#audience">Audience</a>
+      </li>
+    </ul>
+    <li><a href="#architecture_overview">Architecture Overview</a> 
+    </li>
+    <li><a href="#installation_setup_instructions">Installation/Setup Instructions</a></li>
+    <ul>
+      <li><a href="#installation_prerequisites">Installation Prerequisites</a> 
+      </li>
+      <li><a href="#environment_details">Environment Details</a> 
+      </li>
+	  <li><a href="#choose_a_setup">Choose a Setup</a> 
+      </li>
+      <li><a href="#setup_instructions">Setup Instructions</a> 
+      </li>
+      <li><a href="#configure_proxy_authentication">Configure Proxy Authentication</a>
+      </li>
+      <li><a href="#build_docker_images">Build Docker Images</a>
+      </li>
+      <li><a href="#build_hygieia">Build Hygieia</a>
+	  </li>
+	       </ul>    
+     <li><a href="#test_the_installation">Test the Installation</a>
+     </li>
+    <li><a href="#troubleshooting">Troubleshooting</a>
+     </li>
+  </ul>
+  
+  <!--Introduction - Overview, Audience, Architecture -->
+  
+  <h2 id="introduction" class="page-header">
+    <a class="anchorjs-link " href="#introduction" aria-label="Anchor link for: introduction" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Introduction
+  </h2>
+  
+        <h3 id="overview" class="page-header">Overview</h3>
+  
+ 
+          <p> Hygieia dashboards provides a simple, accessible snapshot view of the whole DevOps process.
+		  Hygieia dashboards are customizable: you can select your story tracking tools, code repository, build, quality, and deployment tools.
+          </p>
+		  <p> The Hygieia dashboard offers comprehensive overview through two view methods:</p>
+		 <ul>
+		  <li> <b>Widget view</b> - Showcases more detailed information such as features in the current sprint, code contribution activities, continuous integration activities, code analysis, security analysis, unit and functional test results, and deployment and environment status.
+		  <li><b>Pipeline view</b> - Pipeline view pulls back to show each component’s lifecycle progression through the development, testing, and deployment stages.
+		</ul>
+        <h3 id="audience" class="page-header">Audience</h3>
+  
+          <p> The Installation Plan provides installation and configuration procedures for 
+              every part of the Hygieia system. This document describes the correct order for installing the component/tier instances 
+              and performing basic configuration. </p>
+          <p> This guide is intended for a technical audience to implement and 
+              support the application. The audience should have knowledge of Java, MongoDB, Javascript, Git, and RESTful APIs.</p>
+  
+  <h2 id="architecture_overview" class="page-header">
+    <a class="anchorjs-link " href="#architecture_overview" aria-label="Anchor link for: architecture_overview" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Architecture Overview
+  </h2>
+  
+  <p> The following diagram gives an overview of Hygieia Architecture:</p>
+  
+  <img src="images/Architecture_Overview.png" style="width:50%;">
+  
+        <h3 id="ui_layer" class="page-header">UI Layer</h3>
+  
+           <p> The UI Layer provides User Interface to view and interact with the configured DevOps Tools. 
+             The Hygieia dashboard requires installation of: </p>
+              <ul>
+                <li> NodeJS </li>
+                <li> npm </li>
+                <li> gulp </li>
+                <li> bower </li>
+              </ul>
+  
+  <h3 id="api_layer" class="page-header">API Layer</h3>
+  
+  <p> The API Layer contains all common REST API services that work with source data system data, 
+  which has already been collected by other service tasks. This is an abstraction from the local data layer, 
+  and the source system data layer.
+  All REST controllers should be generic to their purpose, and should not be specific to any given source system.</p>
+  
+  <h3 id="collectors_layer" class="page-header">Collectors Layer</h3>
+  <p> Hygieia uses Spring Boot to package the collector as an executable JAR with dependencies. </p>
+  <p> Hygieia supports the following Collectors inventory:</p>
+  <ul>
+                <li>Feature Management Collectors</li>
+                  <ul>
+                    <li>VersionOne</li>
+                    <li>Jira</li>
+
+                  </ul>
+                </li>
+                <li>SCM Collectors</li>
+                  <ul>
+                    <li>GitHub</li>
+                    <li>GitLab</li>
+                    <li>Subversion</li>
+                    <li>Bitbucket</li>
+                  </ul>
+                </li>
+                <li>Deploy Collectors</li>
+                  <ul>
+                    <li>Bamboo</li>
+                    <li>Jenkins</li>
+                    <li>Jenkins Cucumber</li>
+                    <li>Sonar</li>
+                  </ul>
+                </li>
+                <li>Cloud Collectors
+                  <ul>
+                    <li>AWS</a></li>
+                  </ul>
+                </li>
+                <li>Communication Collectors</li>
+                  <ul>
+                    <li>Chat Ops</li>
+                  </ul>
+                </li>
+                <li>Deployment Collectors
+                  <ul>
+                    <li>uDeploy</li>
+                    <li>XLDeploy</li>
+                  </ul>
+                </li>
+              </ul>
+              <p>You can pick and choose which collectors are applicable 
+                for your DevOps toolset or you can write your own collector and plug it in.</p>
+
+<h3 id="db_layer" class="page-header">Database Layer</h3>  
+<p>Hygieia uses MongoDB as the database for storage and retrieval of data.</p>
+<!--End New Content-->
+
+<!-- Edit existing content-->
+  
+<!-- Hygieia Set up -->
+
+<h2 id="installation_setup_instructions" class="page-header">
+      <a class="anchorjs-link " href="#setup_instructions" aria-label="Anchor link for: setup_instructions" data-anchorjs-icon=""
+      style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+      position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Setup Instructions
+</h2>
+
+  <h3 id="installation_prerequisites" class="page-header">Installation Prerequisites</h3>
+    <p> To successfully install and run Hygieia, ensure the following software are installed: </p>
+      <ul> 
+        <li> Maven </li>
+        <li> Java JRE </li>
+        <li> Git </li>
+        <li> MongoDB</li>
+       </ul>
+	 <p>In addition, make sure you have installed the applicable DevOps toolset to configure your Hygieia dashboard.</p>
+	  
+<h3 id="environment_details" class="page-header">Environment Details</h3>
+
+<h4 id="software_support_matrix" class="page-header">Software Support Matrix</h4>
+
+<!-- Table text test-->
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="208">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="208">
+<p><strong>Software</strong></p>
+</td>
+<td valign="top" width="208">
+<p><strong>Supported Versions</strong></p>
+</td>
+</tr>
+<tr>
+<td rowspan="4" valign="top" width="208">
+<p><strong>Code Repository</strong></p>
+</td>
+<td valign="top" width="208">
+<p>GitHub</p>
+</td>
+<td valign="top" width="208">
+<p>GitHub Enterprise 2.5</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="208">
+<p>Subversion</p>
+</td>
+<td valign="top" width="208">
+<p>version 1.5.2 (r32768)</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="208">
+<p>Gitlab</p>
+</td>
+<td valign="top" width="208">
+<p>Gitlab 9.2.5</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="208">
+<p>Bitbucket</p>
+</td>
+<td valign="top" width="208">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td rowspan="2" valign="top" width="208">
+<p><strong>Deployment Tools</strong></p>
+</td>
+<td valign="top" width="208">
+<p>UDeploy</p>
+</td>
+<td valign="top" width="208">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="208">
+<p>XL Deploy</p>
+</td>
+<td valign="top" width="208">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="208">
+<p><strong>Database</strong></p>
+</td>
+<td valign="top" width="208">
+<p>MongoDB</p>
+</td>
+<td valign="top" width="208">
+<p>MongoDB 3.2.11</p>
+</td>
+</tr>
+<tr>
+<td rowspan="2" valign="top" width="208">
+<p><strong>Feature Management</strong></p>
+</td>
+<td valign="top" width="208">
+<p>JIRA</p>
+</td>
+<td valign="top" width="208">
+<p>JIRA v7.2.8</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="208">
+<p>VersionOne</p>
+</td>
+<td valign="top" width="208">
+<p>Ultimate Edition v.17.0.6.20</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="208">
+<p><strong>Java</strong></p>
+</td>
+<td valign="top" width="208">
+<p>JDK</p>
+</td>
+<td valign="top" width="208">
+<p>JDK 1.8.0_131</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="supported_browsers" class="page-header">Supported Browsers</h4>
+
+<table border="1" cellspacing="0" cellpadding="0">
+<thead>
+<tr>
+<td valign="top" width="156">
+<p><strong>Browser Name</strong></p>
+</td>
+<td valign="top" width="168">
+<p><strong>Supported Versions</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="156">
+<p>Internet Explorer (IE)</p>
+</td>
+<td valign="top" width="168">
+<p>IE 11.0.9600.18665CO</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="156">
+<p>Mozilla Firefox</p>
+</td>
+<td valign="top" width="168">
+<p>v54.0.1</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="156">
+<p>Safari</p>
+</td>
+<td valign="top" width="168">
+<p>Safari 5</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="156">
+<p>Chrome</p>
+</td>
+<td valign="top" width="168">
+<p>Version 57.0.2987.110</p>
+</td>
+</tr>
+</thead>
+</table>
+
+<h3 id="choose_a_setup" class="page-header">Choose a Setup</h3>
+<p> Hygieia can be installed and configured as:</p>
+<ul>
+  <li> Desktop Version - Install Hygieia and operationalize the DevOps dashboard for your application.</li>
+  <li> Enterprise Version - Install Hygieia at a central location for project teams to create a dashboard for each branch/project. </li>
+ </ul>
+<p>Hygieia supports different Operating Systems to install and configure the DevOps dashboard as Desktop or Enterprise version:</p>
+ <ul>
+   <li> <a href="mac.html"> Install on MAC OS X</li>
+   <li> <a href="windows.html">Install on Windows</li>
+   <li> <a href="linux.html">Install on Linux</li>
+  </ul>
+
+  
+<h3 id="setup_instructions" class="page-header">Setup Instructions</h3>
+
+<p style="text-align:justify;">The following components are required to run Hygieia:</p>
+  <ul>
+    <li><a href="#database">Database</a></li>
+    <li><a href="#tool_collectors">Tool Collectors</a></li>
+    <li><a href="#api_layer">API Layer</a></li>
+    <li><a href="#ui_layer">UI Layer</a></li>
+    <li><a href="#plugin_webhook">Plugins/WebHook</a></li>
+  </ul>
+
+  <h3 id="database" class="page-header">Database Configuration</h3>
+  <p> Hygieia uses MongoDB (version 3.0 and above) as the database for storage and retrieval of data. 
+	  It is recommended to download any MongoDB GUI client (for example, Robo 3T) to create the database dashboard and successfully connect to it.
+  </p>
+
+<h4 class="page-header">Download and Install Instructions</h4>
+
+<p> If you do not already have MongoDB installed, download the Installation Package from <a href="https://www.mongodb.org/downloads#previous">MongoDB download page</a> 
+	and follow the installation instructions in the <a href="https://docs.mongodb.com/manual/">MongoDB manual</a>.</p>
+
+<h4 class="page-header">Configuration Steps</h4>
+
+<p>Follow the configuration steps to run Hygieia in your MongoDB installation.</p>
+
+  <ul> 
+    <li> <b>Step 1: Create Data Directory</b></li>
+		<p>Create a data directory on the drive from which you start MongoDB to store your data files.<p> 
+	
+         <p> For example, in the Windows command prompt, run the following command:
+		 <pre code>C:\Users\[usernname]\dev\data\db</pre code> </p>
+    
+    <li> <b>Step 2: Change Directory</b></li>
+		 <p>Change the current working directory to the <code>bin</code> directory of your MongoDB installation.</p>
+		 <p> For example, in the Windows command prompt, run th following command:
+		 <pre code> cd C:\Program Files\MongoDB\Server\3.2\bin</pre code></p>
+	<li> <b>Step 3: Start MongoDB </b>
+		 <p>Specify the path to use as data directory:</p>
+		<pre code>mongod --dbpath [path to the data directory]</pre code>
+		<p> Execute the following commands to start MongoDB, switch to db dashbaord, and then add dashboard user:<p>
+	  <pre code>
+#Start mongo
+
+Command: > mongo
+Output:  MongoDB shell version: 3.2
+		 connecting to: test
+			
+#Switch to db dashboard
+
+Command: > use dashboarddb
+Output:  switched to db dashboard
+
+#Create db user
+
+Command: > db.createUser(
+			{
+			  user: "dashboarduser",
+			  pwd: "dbpassword",
+			  roles: [
+			  {role: "readWrite", db: "dashboarddb"}
+			  ]
+			})
+			
+Output:  Successfully added user: {
+         "user" : "dashboarduser",
+         "roles" : [
+		  {
+			"role" : "readWrite",
+			"db" : "dashboarddb"
+		  }
+		  ]
+		  }
+	  </pre code>
+       	
+  </ul>	
+
+ 
+<!-- Old DB Content
+<ul>
+    <li><a href="https://www.mongodb.org/downloads#previous">MongoDB Download and Install instructions</a></li>
+    <li>Configure MongoDB</li>
+    <ul>
+      <li>Go to the bin directory of your mongodb installation and run the following command to start the mongodb do make sure that data directory should pre-exist at the target location </li>
+<pre code>
+  mongod --dbpath [path to the data directory] </pre code><br>
+      <p >for e.g
+<pre code>
+  /usr/bin/mongodb-linux-x86_64-2.6.3/bin/mongod --dbpath /dev/data/db </pre code></p>
+      <li>Run the following commands as shown below at mongodb command prompt  <code>/usr/bin/mongodb-linux-x86_64-2.6.3/bin/mongo </code></li>
+<pre code>
+    $ mongo
+    MongoDB shell version: 3.0.4
+    connecting to: test
+
+    > use dashboard
+    switched to db dashboard
+    > db.createUser(
+    {
+      user: "db",
+      pwd: "dbpass",
+      roles: [
+      {role: "readWrite", db: "dashboard"}
+      ]
+    })
+    Successfully added user: {
+      "user" : "dbuser",
+      "roles" : [
+      {
+        "role" : "readWrite",
+        "db" : "dashboard"
+      }
+      ]
+      }</pre code>
+        </ul>
+      </ul>
+ 
+End old DB content-->
+
+   <h3 id="tool_collectors" class="page-header">Tool Collectors</h3>
+          <p>Following are the generic steps to configure and run the collectors:</p>
+	<ul> 
+    <li> <b>Step 1: Build and Deploy</b></li>
+		<p>Run the maven build to package the collector into an executable JAR file:</p> 
+		<pre code>mvn install</pre code>
+	     <p>The output file <code>[collector-name]-collector.jar</code> is generated in the target folder. Copy this file to your server and launch it using: </p>  
+			<pre code> java -jar [collector-name]-collector.jar</pre code>
+    <li> <b>Step 2: Application Properties </b></li>
+		 <p> Set values in the application.properties file to connect to the Dashboard MongoDB database instance, including properties required by the Hudson collector. </p>
+	</ul>
+		  
+		  
+		  <p>In general, all the collectors can be run using the following command:</p>
+  <pre code>
+    java -jar <Path to collector-name.jar> --spring.config.name=<prefix for properties> --spring.config.location=[path to properties file location]</pre code>
+
+              <p>To configure and run the individual collectors, click on the links below:</p>
+              <ul>
+                <li>Agile Story Management
+                  <ul>
+                    <li><a href="versionone_collector.html">VersionOne</a></li>
+                    <li><a href="jirafeature_collector.html">Jira</a></li>
+
+                  </ul>
+                </li>
+                <li>Source Code Management
+                  <ul>
+                    <li><a href="githubsourcecode_collector.html">GitHub</a></li>
+                    <li><a href="stashsourcecode_collector.html">GitLab</a></li>
+					<li><a href="subversionsourcecode_collector.html">Subversion</a></li>
+					<li><a href="bitbucketsourcecode_collector.html">Bitbucket</a></li>
+                  </ul>
+                </li>
+                <li>Build
+                  <ul>
+                    <li><a href="jenkisbuild_collector.html">JenkinsHudson</a></li>
+					<li><a href="bamboobuild_collector.html">Bamboo</a></li>
+                  </ul>
+                </li>
+				<li>Cloud Collector
+                  <ul>
+                    <li><a href="aws_collector.html">AWS</a></li>
+                  </ul>
+                </li>
+                <li>Testing
+                  <ul>
+                    <li><a href="jenkinscucumbertest_collector.html">Jenkins Cucumber Test</a></li>
+                  </ul>
+                </li>
+                <li>Code Quality
+                  <ul>
+                    <li><a href="sonarcodequality_collector.html">Sonar</a></li>
+                  </ul>
+                </li>
+                <li>Deployment
+                  <ul>
+                    <li><a href="udeploy_collector.html">uDeploy 6.x from IBM</a></li>
+                  </ul>
+				  <ul>
+                    <li><a href="xldeploy_collector.html">XLDeploy</a></li>
+                  </ul>
+                </li>
+                <li>Communication
+                  <ul>
+                    <li><a href="chatops_collector.html">ChatOps</a></li>
+                  </ul>
+					</li>
+				
+              </ul>
+              <p>You can choose the collectors that are applicable for your DevOps toolset or you can write your own collector and plug it in.</p>
+				
+				<h4 class="page-header">Create New Collector</h4>
+				
+				<p>Click <a href="new_collector.html">here</a> for instructions to create, build, and deploy a new collector.</p>				
+				
+          <h3 id="api_layer" class="page-header">API Layer</h3>
+          <p>Click <a href="api.html">here</a> to learn about the API Layer setup.</p>
+		  
+		  <h3 id="ui_layer" class="page-header">
+          UI Layer
+			</h3>
+
+      <p>Click <a href="ui.html">here</a> to learn about how to build and run the UI layer.</p>
+
+          
+
+    <h3 id="plugin_webhook" class="page-header"> Plugins/Webhook
+    </h3>
+    <p>You can use Jenkins - Hygieia plugin to publish data from Jenkins to Hygieia.
+      Currently, you can publish build, artifact info, sonar results, deployment results and
+      cucumber test results. You may not need to run corresponding collectors if you use Jenkins for
+      build, deploy, sonar analysis and running cucumber tests.</p>
+
+    <ul>
+      <li><a href="hygieiajenkinsplugin.html">Hygieia Jenkins Plugin</a></li>
+    </ul>
+
+    You can use GitHub webhook to publish commit information to Hygieia. If you use webhook, you will not need to run github collector.
+
+    Your Github webhook's payload url should be set to: http://hygieia-base-url/api/commit/github/v3
+    <ul>
+      <li>Select to publish just the "push" events</li>
+      <li>Configure Proxy</li>
+    </ul>
+
+    <h3 id="configure_proxy_authentication" class="page-header">Configure Proxy Authentication
+  </h3>
+    <p>Hygieia supports proxy authentication for working behind corporate firewalls.
+      For development, please refer to the following configuration differences; for
+      deployment/operations, please refer to the subsequent sub-section:</p>
+
+    <ol><li><h4 id="proxyconfig_developer">Proxy Config: Developer / Operations</h4></li>
+
+
+    <p>Update your Maven settings.xml file:</p>
+
+    <pre code>
+      ...
+      &lt;proxies&gt;
+             ...
+             &lt;proxy&gt;
+                     &lt;id&gt;your-proxy-id&lt;/id&gt;
+                     &lt;active&gt;true&lt;/active&gt;
+                     &lt;protocol&gt;http&lt;/protocol&gt;
+                     &lt;host&gt;your.proxy.domain.name&lt;/host&gt;
+                     &lt;port&gt;8080&lt;/port&gt;
+                     &lt;!-- For authenticated proxy, please set the following, as well --&gt;
+                     &lt;username&gt;companyId999&lt;/username&gt;
+                     &lt;password&gt;yourPassword&lt;/password&gt;
+                     &lt;nonProxyHosts&gt;*.local&lt;/nonProxyHosts&gt;
+             &lt;/proxy&gt;
+             ...
+       &lt;/proxies&gt;
+       ...
+    </pre code>
+
+    <p>Additionally, set the following export variables:</p>
+
+
+  <pre code>
+    export HTTP_PROXY=http://companyId999:yourPassword@your.proxy.domain.name:8080
+    export HTTPS_PROXY=http://companyId999:yourPassword@your.proxy.domain.name:8080
+    export JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=your.proxy.domain.name -Dhttp.proxyPort=8080 -Dhttp.proxyUser=companyId999 -Dhttp.proxyPassword=yourPassword"
+
+    # This option may be duplicative if you have already updated your
+    # Maven settings.xml file, but will only help:
+    export MAVEN_OPTS="$MAVEN_OPTS -Dhttp.proxyHost=your.proxy.domain.name -Dhttp.proxyPort=8080 -Dhttp.proxyUser=companyId999 -Dhttp.proxyPassword=yourPassword"
+    Tests should now run/pass when built from behind a corporate proxy, even if it is an authenticated proxy</pre code>
+
+
+<li><h4 id="proxyconfig_deployment">Proxy Config: Deployment/Operations</h4></li>
+
+    <p>Only the above proxy settings (non authentication) may required to be set on your deployment instance. Additionally,
+      please updated all property files for each collector/API configuration with their specific proxy setting property.
+    </p></ol>
+
+    <h3 id="build_docker_images" class="page-header">
+        Build Docker Images
+    </h3>
+
+    <ul><li>Execute the following command to build the containers.</li></ul>
+  <pre code>
+    mvn docker:build</pre code>
+
+    <ul><li>Execute the following command to bring up the container images.</li></ul>
+  <pre code>
+    docker-compose up -d</pre code>
+
+    <ul><li>Create user in mongo (if you log into the container then you dont have to install mongo locally)</li></ul>
+  <pre code>
+    docker exec -t -i mongodb2 bash
+    mongo 192.168.64.2/admin  --eval 'db.getSiblingDB("dashboard").createUser({user: "db", pwd: "dbpass", roles: [{role: "readWrite", db: "dashboard"}]})'
+  </pre code>
+
+    <ul><li>Create a docker-compose.override.yml to configure your environment</li></ul>
+  <p>
+
+    These are the most common entries, the uncommented ones are mandatory if you want the collector to work. For dev/testing you will find it useful to change the CRON entries to "0 * * * * *"
+
+    hygieia-github-scm-collector:</p>
+  <pre code>
+      environment:
+      - GITHUB_HOST=github.com
+      - GITHUB_CRON=0 * * * * *
+      - GITHUB_COMMIT_THRESHOLD_DAYS=300
+    hygieia-jira-feature-collector:
+      environment:
+      - JIRA_BASE_URL=https://mycompany.atlassian.net/
+      - JIRA_CREDENTIALS=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      - JIRA_ISSUE_TYPE_ID=10200
+      - JIRA_SPRINT_DATA_FIELD_NAME=customfield_10007
+      - JIRA_EPIC_FIELD_NAME=customfield_10008
+    hygieia-jenkins-build-collector:
+      environment:
+      - JENKINS_CRON=0 * * * * *
+      - JENKINS_MASTER=http://192.168.99.100:9100
+      - JENKINS_USERNAME=XXXXXXXXXXXXXXXXXXXXXX
+      - JENKINS_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXX
+    hygieia-jenkins-cucumber-test-collector:
+      environment:
+      - JENKINS_CRON=0 * * * * *
+      - JENKINS_MASTER=http://192.168.99.100:9100
+      - JENKINS_USERNAME=XXXXXXXXXXXXXXXXXXXXXX
+      - JENKINS_API_KEY=XXXXXXXXXXXXXXXXX
+      - JENKINS_CUCUMBER_JSON_FILENAME=cucumber-report.json
+    hygieia-sonar-codequality-collector:
+      environment:
+      - SONAR_URL=http://192.168.99.100:9000
+      - SONAR_CRON=0 * * * * *
+    Make sure everything is restarted it may fail if the user doesn't exist at start up time
+    docker-compose restart
+    Get the port for the UI
+    docker port hygieia-ui
+  </pre code>
+
+<!--Build Hygieia-->
+<h2 id="build_hygieia" class="page-header">
+    <a class="anchorjs-link " href="#build_hygieia" aria-label="Anchor link for: build_hygieia" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Build Hygieia
+  </h2>
+
+  <p >Run the following command to build all components for Hygieia.</p>
+  <pre code>mvn clean install</pre code>
+
+<h2 id="test_the_installation" class="page-header">
+    <a class="anchorjs-link " href="#test_the_installation" aria-label="Anchor link for: test_the_installation" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Test the Installation
+  </h2>
+  
+  <!-- Setup Git -->
+  <ol><li><h3 id="setup_git" >Setup Git</h3></li>
+
+  <p>Configure it to point to the github master branch for Hygieia</p>
+
+  <pre code>
+  a. In the SCM panel, select 'git'
+  b. Enter the URL: 'https://github.com/capitalone/Hygieia.git' (without the quotes)
+  c. Set the branch to 'master' (without the quotes)
+  Note: For this to work you will need to have set your credentials on the ID that the collectors is running under, the best way to do this is first clone the repo to set your credentials.
+  </pre code>
+
+
+  <!-- Setup Sonar -->
+
+  <li><h3 id="setup_sonar">Setup SONAR</h3></li>
+
+  <p>Run a test instance of SONAR</p>
+
+  <pre code>
+    a. docker-compose -f test-servers/sonar/sonar.yml up -d
+    b. Fill it with data from the Hygieia project
+    mvn sonar:sonar -Dsonar.host.url=http://$(docker-machine ip default):9000 -Dsonar.jdbc.url="jdbc:h2:tcp://$(docker-machine ip default)/sonar"
+    c. You can now go in and configure the quality panel in the UI.</pre code>
+
+
+  <!-- Setup Jenkins -->
+
+<li><h3 id="setup_jenkins">Setup Jenkins</h3></li>
+  <p>Start a test Jenkins Master<br>
+  Output will be in cucumber.</p>
+
+  <pre code>
+    a. docker-compose -f test-servers/jenkins/jenkins.yml up -d
+    b. Run the job: http://192.168.99.100:9100/job/Hygieia_Example_Job/build
+    c. Configure the Jenkins Build and Jenkins Cucumber panels using this jobs output.</pre code></ol>
+
+</div>
