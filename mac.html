@@ -1,0 +1,113 @@
+---
+layout: default
+title: Installing Hygieia on MAC OS X
+lead: Know the Basics of Installing and Configuring Hygieia on MAC
+slug: mac
+---
+<div class="bs-docs-section">
+  
+   <h2  class="page-header">
+    <a class="anchorjs-link " href="#installing_hygieia_on_mac" aria-label="Anchor link for: installing_hygieia_on_windows" data-anchorjs-icon=""
+    style="font-family: anchorjs-icons; font-style: normal; font-variant: normal; font-weight: normal;
+    position: absolute; margin-left: -1em; padding-right: 0.5em;"></a>Installing Hygieia on MAC
+   </h2>
+   <p>This document provides instructions to install Hygieia on Windows.</p>
+   <h3 id="windows_toc" class="page-header">Contents</h3>
+   <ul>
+   <li><a href="#windows_setup_instructions">Setup Instructions</a>
+    </li>
+    <ul>
+      <li><a href="#mac_database">Database</a>
+      </li>
+      </li>
+	  <li><a href="#mac_api_layer">API</a>
+      </li>
+	  <li><a href="#mac_ui_layer">UI</a>
+      </li>
+	  <li><a href="#mac_collectors">Collectors</a>
+    </ul> 
+	</ul>
+	<h3 id="windows_setup_instructions" class="page-header">Setup Instructions</h3>
+	<p style="text-align:justify;">The following components are required to run Hygieia:</p>
+  <ul>
+    <li><a href="#database">Database</a></li>
+    <li><a href="#tool_collectors">Tool Collectors</a></li>
+    <li><a href="#api_layer">API Layer</a></li>
+    <li><a href="#ui_layer">UI Layer</a></li>
+    <li><a href="#plugin_webhook">Plugins/WebHook</a></li>
+  </ul>
+  <h3 id="database" class="page-header">Database Configuration</h3>
+  <p> Hygieia uses MongoDB (version 3.0 and above) as the database for storage and retrieval of data. 
+	  It is recommended to download any MongoDB GUI client (for example, Robo 3T) to create the database dashboard and successfully connect to it.
+  </p>
+
+<h4 class="page-header">Download and Install Instructions</h4>
+
+<p> If you do not already have MongoDB installed, download the Installation Package from <a href="https://www.mongodb.org/downloads#previous">MongoDB download page</a> 
+	and follow the installation instructions in the <a href="https://docs.mongodb.com/manual/">MongoDB manual</a>.</p>
+
+<h4 class="page-header">Configuration Steps</h4>
+
+<p>Follow the configuration steps to run Hygieia in your MongoDB installation.</p>
+
+  <ul> 
+    <li> <b>Step 1: Create Data Directory</b></li>
+		<p>Create a data directory on the drive from which you start MongoDB to store your data files.</p> 
+	
+         <p> For example, in the Windows command prompt, run the following command:
+		 <pre code>C:\Users\[usernname]\dev\data\db</pre code> </p>
+    
+    <li> <b>Step 2: Change Directory</b></li>
+		 <p>Change the current working directory to the <code>bin</code> directory of your MongoDB installation.</p>
+		 <p> For example, in the Windows command prompt, run th following command:
+		 <pre code> cd C:\Program Files\MongoDB\Server\3.2\bin</pre code></p>
+	<li> <b>Step 3: Start MongoDB </b>
+		 <p>Specify the path to use as data directory:</p>
+		<pre code>mongod --dbpath [path to the data directory]</pre code>
+		<p> Execute the following commands to start MongoDB, switch to db dashbaord, and then add dashboard user:</p>
+	  <pre code>
+#Start mongo
+
+Command: > mongo
+Output:  MongoDB shell version: 3.2
+		 connecting to: test
+			
+#Switch to db dashboard
+
+Command: > use dashboarddb
+Output:  switched to db dashboard
+
+#Create db user
+
+Command: > db.createUser(
+			{
+			  user: "dashboarduser",
+			  pwd: "dbpassword",
+			  roles: [
+			  {role: "readWrite", db: "dashboarddb"}
+			  ]
+			})
+			
+Output:  Successfully added user: {
+         "user" : "dashboarduser",
+         "roles" : [
+		  {
+			"role" : "readWrite",
+			"db" : "dashboarddb"
+		  }
+		  ]
+		  }
+	  </pre code>
+	  </li>
+	  </ul>
+	  
+	<h3 id="mac_api_layer" class="page-header">API Layer</h3>
+          <p>Click <a href="api.html">here</a> to learn about the API Layer setup.</p>
+		  
+	<h3 id="mac_ui_layer" class="page-header">UI Layer</h3>
+
+     <p>Click <a href="ui.html">here</a> to learn about how to build and run the UI layer.</p>
+	 
+	 <h3><a href="#collectors">Collectors</a></h3>
+	 <p> Hygieia supports various collectors for the applicable DevOps Toolset. To view the list of supported collectors and install them, click <a href="collectors.html">here</a></p>
+</div>
